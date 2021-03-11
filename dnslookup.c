@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
   hints.ai_socktype  = SOCK_STREAM;
 
   for (int i = 1; i < argc; i++){
-    struct addrinfo* res;
+    struct addrinfo *res, *rp;
     int error;
 
     /* Converts DNS or IPs into dynamically allocated linked list 
@@ -34,23 +34,23 @@ int main(int argc, char *argv[]) {
       return 2;   
     }
 
-    struct addrinfo* curr_addr;
+    // struct addrinfo* rp;
     /* Loops through all the items in the linked list  */
-    for (curr_addr = res; curr_addr != NULL; curr_addr = curr_addr->ai_next) {
+    for (rp = res; rp != NULL; rp = rp->ai_next) {
       char dst_buffer[BUFLEN] = {0};
 
       /* Identifies if its either IPv4 or IPv6 address */
-      void * src_addr = curr_addr->ai_family == AF_INET6 
-        ? (void *)&((struct sockaddr_in6*)curr_addr->ai_addr)->sin6_addr
-          : (void *)&((struct sockaddr_in*)curr_addr->ai_addr)->sin_addr;
+      void * src_addr = rp->ai_family == AF_INET6 
+        ? (void *)&((struct sockaddr_in6*)rp->ai_addr)->sin6_addr
+          : (void *)&((struct sockaddr_in*)rp->ai_addr)->sin_addr;
       
       /* Converts IPv4 and IPv6 addresses from binary to text form */
-      if (inet_ntop(curr_addr->ai_family, src_addr, dst_buffer, sizeof(dst_buffer)) == NULL) {
+      if (inet_ntop(rp->ai_family, src_addr, dst_buffer, sizeof(dst_buffer)) == NULL) {
         printf("Unable to convert IP address to string");
         return 3;
 
       }
-      printf("%s %s %s\n", argv[i], curr_addr->ai_family == AF_INET6 ? "IPv6" : "IPv4", dst_buffer);
+      printf("%s %s %s\n", argv[i], rp->ai_family == AF_INET6 ? "IPv6" : "IPv4", dst_buffer);
 
     }
 
