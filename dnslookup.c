@@ -34,7 +34,6 @@ int main(int argc, char *argv[]) {
       return 2;   
     }
 
-    // struct addrinfo* rp;
     /* Loops through all the items in the linked list  */
     for (rp = res; rp != NULL; rp = rp->ai_next) {
       char dst_buffer[BUFLEN] = {0};
